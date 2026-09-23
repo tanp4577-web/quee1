@@ -1,41 +1,28 @@
 pipeline {
-    agent any 
-
+    agent any
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/tanp4577-web/quee1.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/tanp4577-web/quee1.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
-                // Call python module explicitly using its complete default execution syntax
-                bat '''
-                python -m pip install --upgrade pip --quiet
-                python -m pip install -r requirements.txt --quiet
-                '''
+                bat 'pip install -r requirements.txt'
             }
         }
-
         stage('Run Unit Tests') {
             steps {
-                // Invokes pytest directly as a python module to bypass system PATH variable limitations
-                bat 'python -m pytest test_app.py'
+                bat 'pytest'
             }
         }
     }
-
     post {
         success {
-            echo '===================================='
-            echo 'SUCCESS: All stages passed perfectly!'
-            echo '===================================='
+            echo 'Build succeeded: all tests passed.'
         }
         failure {
-            echo '===================================='
-            echo 'FAILURE: The build or tests failed!'
-            echo '===================================='
+            echo 'Build failed: check the test output above.'
         }
     }
 }
