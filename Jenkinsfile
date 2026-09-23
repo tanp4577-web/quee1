@@ -1,28 +1,27 @@
 pipeline {
-    agent any // Runs on the first available agent, fixing the "doesn't have label" error
+    agent any 
 
     stages {
         stage('Checkout') {
             steps {
-                // Clones your specific GitHub repository automatically
-                git url: 'https://github.com', branch: 'main'
+                git url: 'https://github.com/tanp4577-web/quee1.git', branch: 'main'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                // Uses Windows batch commands to safely install requirements without prompting
+                // Call python module explicitly using its complete default execution syntax
                 bat '''
                 python -m pip install --upgrade pip --quiet
-                pip install -r requirements.txt --quiet
+                python -m pip install -r requirements.txt --quiet
                 '''
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                // Executes the test suite via pytest
-                bat 'pytest test_app.py'
+                // Invokes pytest directly as a python module to bypass system PATH variable limitations
+                bat 'python -m pytest test_app.py'
             }
         }
     }
